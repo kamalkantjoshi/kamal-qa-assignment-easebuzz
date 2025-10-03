@@ -24,4 +24,19 @@ This suite validates the JSONPlaceholder API (`https://jsonplaceholder.typicode.
     ```
     *Expected Result: 5 tests should run and pass.*
 
+
+
+## Postman Collection
+
+You can test the APIs using Postman.
+
+- Import the collection from: `postman/Postman Automation.postman_collection.json`
+- Import the environment: `postman/Development.postman_environment.json`
+
+Steps:
+1. Open Postman
+2. Click "Import"
+3. Select the JSON files
+4. Go to collection and run
+
 ---
