@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "3bc5ecbc-6ab0-4dc0-977c-e198ceee8a34",
+		"name": "Postman Automation",
+		"description": "Postman automation suite for GET, POST, and DELETE endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28841252"
+	},
+	"item": [
+		{
+			"name": "GET /posts - Validate 200 Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('array');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/posts",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /posts - Create and Verify Content",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201 Created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"let responseData = pm.response.json();",
+							"let requestBody = pm.request.body.raw ? JSON.parse(pm.request.body.raw) : {};",
+							"",
+							"pm.test(\"Response title matches request\", function () {",
+							"    pm.expect(responseData.title).to.eql(requestBody.title);",
+							"});",
+							"",
+							"pm.test(\"Response body matches request\", function () {",
+							"    pm.expect(responseData.body).to.eql(requestBody.body);",
+							"});",
+							"",
+							"if (responseData.id) {",
+							"    pm.collectionVariables.set(\"postId\", responseData.id);",
+							"    console.log(\"New Post ID set to: \" + responseData.id);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Postman Automation Test Title\",\n    \"body\": \"This post was created by a Postman script for testing.\",\n    \"userId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/posts",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /posts/{{id}} - Verify 200 or 204 Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 204\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+							"});",
+							"",
+							"pm.test(\"Post ID variable is cleared\", function () {",
+							"    pm.collectionVariables.unset(\"postId\");",
+							"    console.log(\"Post ID variable cleared.\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/posts/{{postId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"posts",
+						"{{postId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
